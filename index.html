@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Verification Form - Manufacturers Steel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #0056b3;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background-color: #004494;
+    }
+    .success {
+      text-align: center;
+      color: green;
+      margin-top: 20px;
+    }
+    .error {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Candidate Verification Form</h2>
+    <form id="verificationForm">
+      <label for="fullName">Full Name *</label>
+      <input type="text" id="fullName" name="fullName" required>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="phone">Cell Phone Number *</label>
+      <input type="tel" id="phone" name="phone" required>
+
+      <label for="street">Street Address *</label>
+      <input type="text" id="street" name="street" required>
+
+      <label for="city">City *</label>
+      <input type="text" id="city" name="city" required>
+
+      <label for="state">State *</label>
+      <input type="text" id="state" name="state" required>
+
+      <label for="zip">ZIP Code *</label>
+      <input type="text" id="zip" name="zip" required>
+
+      <label for="position">Position Applied For *</label>
+      <select id="position" name="position" required>
+        <option value="">Select a Position</option>
+        <option value="Remote Administrative Coordinator">Remote Administrative Coordinator</option>
+        <option value="Customer Operations Coordinator">Customer Operations Coordinator</option>
+      </select>
+
+      <label for="availability">Availability (Full-Time, Part-Time, Flexible) *</label>
+      <input type="text" id="availability" name="availability" required>
+
+      <label for="comments">Additional Comments / Notes</label>
+      <textarea id="comments" name="comments" rows="3"></textarea>
+
+      <button type="submit" id="submitBtn">Submit Verification</button>
+
+      <div id="formMessage"></div>
+    </form>
+  </div>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("5PP6jN-EvGaO-4J6M");
+    })();
+
+    const form = document.getElementById("verificationForm");
+    const formMessage = document.getElementById("formMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      formMessage.textContent = "";
+
+      const formData = {
+        fullName: form.fullName.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        street: form.street.value,
+        city: form.city.value,
+        state: form.state.value,
+        zip: form.zip.value,
+        position: form.position.value,
+        availability: form.availability.value,
+        comments: form.comments.value
+      };
+
+      emailjs.send("service_yrpcg4c", "template_8cn14hs", formData)
+        .then(() => {
+          formMessage.textContent = "Your verification has been submitted successfully!";
+          formMessage.className = "success";
+          form.reset();
+          submitBtn.textContent = "Submitted";
+        })
+        .catch(error => {
+          console.error("EmailJS Error:", error);
+          formMessage.textContent = "Submission failed. Please try again.";
+          formMessage.className = "error";
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Verification";
+        });
+    });
+  </script>
+</body>
+</html>
